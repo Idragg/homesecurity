@@ -1,17 +1,39 @@
 package be.github.homesecurity;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import be.github.homesecurity.model.Home;
+import be.github.homesecurity.model.Pressureplate;
+import be.github.homesecurity.model.Security;
+import be.github.homesecurity.model.Sensor;
+
 public class Main {
     static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+        Home home = new Home();
+        Security securitySystem1 = new Pressureplate("Front door");
+        Security securitySystem2 = new Pressureplate("Kitchen");
+        Security securitySystem3 = new Sensor("Stairwell");
+        Security securitySystem4 = new Sensor("Bedroom door");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
-        }
+        Security securitySystem5 = new Sensor("Bathroom door");
+        Security securitySystem6 = new Sensor();
+
+        home.subscribeSecuritySystem(securitySystem1);
+        home.subscribeSecuritySystem(securitySystem2);
+        home.subscribeSecuritySystem(securitySystem3);
+        home.subscribeSecuritySystem(securitySystem4);
+        home.subscribeSecuritySystem(securitySystem5);
+        home.subscribeSecuritySystem(securitySystem6);
+
+        System.out.println("Active security system");
+        home.activateSecuritySystem();
+
+        System.out.println("\nCurrent security system");
+        home.activateSecuritySystem();
+
+        System.out.println("\nDeactivated security system");
+        home.deactivateSecuritySystem();
+
+        System.out.println("\nActivating security system");
+        home.activateSecurity(securitySystem1);
+        home.activateSecurity(securitySystem6);
     }
 }
