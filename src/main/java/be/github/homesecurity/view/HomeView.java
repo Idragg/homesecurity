@@ -145,6 +145,42 @@ public class HomeView {
         );
     }
 
+    public void addSecurityIndicator(
+            String name,
+            String icon,
+            Security security,
+            boolean active,
+            Runnable onClick) {
+
+        Label iconLabel = new Label(icon);
+        iconLabel.setStyle("-fx-font-size: 20px;");
+
+        // Vaste breedte voor alle iconen
+        iconLabel.setMinWidth(40);
+        iconLabel.setPrefWidth(40);
+        iconLabel.setMaxWidth(40);
+        iconLabel.setAlignment(Pos.CENTER);
+
+        Label label = new Label(name);
+
+        // Vaste breedte voor alle namen
+        label.setMinWidth(120);
+        label.setPrefWidth(120);
+        label.setMaxWidth(120);
+
+        Circle circle = new Circle(12);
+        circle.setFill(active ? Color.RED : Color.GREEN);
+        circle.setOnMouseClicked(event -> onClick.run());
+
+        HBox row = new HBox(15, iconLabel, label, circle);
+        row.setAlignment(Pos.CENTER_LEFT);
+
+        securityList.getChildren().add(row);
+
+        securityIndicators.put(security, circle);
+    }
+
+
     public Button getBtnActivate() {
         return btnActivate;
     }

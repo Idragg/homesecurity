@@ -22,10 +22,16 @@ public class Main extends Application {
         Security securitySystem1 = new Sensor("Front door");
         Security securitySystem2 = new Sensor("Kitchen");
         Security securitySystem3 = new Pressureplate("Stairwell");
+        Security securitySystem4 = new Pressureplate("Side door");
+        Security securitySystem5 = new Sensor("Bathroom");
+        Security securitySystem6 = new Pressureplate("Kids room");
 
         model.subscribeSecuritySystem(securitySystem1);
         model.subscribeSecuritySystem(securitySystem2);
         model.subscribeSecuritySystem(securitySystem3);
+        model.subscribeSecuritySystem(securitySystem4);
+        model.subscribeSecuritySystem(securitySystem5);
+        model.subscribeSecuritySystem(securitySystem6);
         controller.load();
 
         Scene scene = new Scene(view.getRoot(), 800, 600);
@@ -33,6 +39,7 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image("/logo.png"));
         primaryStage.setTitle("Homesecurity");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

@@ -2,7 +2,9 @@
 package be.github.homesecurity.controller;
 
 import be.github.homesecurity.model.Home;
+import be.github.homesecurity.model.Pressureplate;
 import be.github.homesecurity.model.Security;
+import be.github.homesecurity.model.Sensor;
 import be.github.homesecurity.view.HomeView;
 
 public class HomeController {
@@ -20,7 +22,10 @@ public class HomeController {
 
         for (Security security : model.getSecuritieSystems()) {
             view.addSecurityIndicator(
+                    security.getPlace(),
+                    getSecurityIcon(security),
                     security,
+                    security.isActive(),
                     () -> toggleSensor(security)
             );
         }
@@ -51,5 +56,13 @@ public class HomeController {
 
         model.setSecurityStatus(security, newStatus);
         view.updateSecurityStatus(security, newStatus);
+    }
+
+    private String getSecurityIcon(Security security) {
+        return switch (security) {
+            case Sensor sensor -> "📡";
+            case Pressureplate pressureplate -> "👣";
+            default -> "🔒";
+        };
     }
 }
