@@ -27,4 +27,14 @@ public class Sensor implements Security {
             this.active = active;
         }
     }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public String getPlace() {
+        return place;
+    }
 }

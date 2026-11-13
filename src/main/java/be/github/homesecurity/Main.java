@@ -1,39 +1,42 @@
 package be.github.homesecurity;
 
+import be.github.homesecurity.controller.HomeController;
 import be.github.homesecurity.model.Home;
 import be.github.homesecurity.model.Pressureplate;
 import be.github.homesecurity.model.Security;
 import be.github.homesecurity.model.Sensor;
+import be.github.homesecurity.view.HomeView;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
-public class Main {
-    static void main() {
-        Home home = new Home();
-        Security securitySystem1 = new Pressureplate("Front door");
-        Security securitySystem2 = new Pressureplate("Kitchen");
-        Security securitySystem3 = new Sensor("Stairwell");
-        Security securitySystem4 = new Sensor("Bedroom door");
+public class Main extends Application {
 
-        Security securitySystem5 = new Sensor("Bathroom door");
-        Security securitySystem6 = new Sensor();
+    @Override
+    public void start(Stage primaryStage) {
+        Home model = new Home();
+        HomeView view = new HomeView();
 
-        home.subscribeSecuritySystem(securitySystem1);
-        home.subscribeSecuritySystem(securitySystem2);
-        home.subscribeSecuritySystem(securitySystem3);
-        home.subscribeSecuritySystem(securitySystem4);
-        home.subscribeSecuritySystem(securitySystem5);
-        home.subscribeSecuritySystem(securitySystem6);
+        HomeController controller = new HomeController(model, view);
+        Security securitySystem1 = new Sensor("Front door");
+        Security securitySystem2 = new Sensor("Kitchen");
+        Security securitySystem3 = new Pressureplate("Stairwell");
 
-        System.out.println("Active security system");
-        home.activateSecuritySystem();
+        model.subscribeSecuritySystem(securitySystem1);
+        model.subscribeSecuritySystem(securitySystem2);
+        model.subscribeSecuritySystem(securitySystem3);
+        controller.load();
 
-        System.out.println("\nCurrent security system");
-        home.activateSecuritySystem();
+        Scene scene = new Scene(view.getRoot(), 800, 600);
 
-        System.out.println("\nDeactivated security system");
-        home.deactivateSecuritySystem();
+        primaryStage.getIcons().add(new Image("/logo.png"));
+        primaryStage.setTitle("Homesecurity");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-        System.out.println("\nActivating security system");
-        home.activateSecurity(securitySystem1);
-        home.activateSecurity(securitySystem6);
+    public static void main(String[] args) {
+        launch(args);
     }
 }
