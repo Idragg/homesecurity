@@ -5,12 +5,16 @@ import be.github.homesecurity.model.Home;
 import be.github.homesecurity.model.Pressureplate;
 import be.github.homesecurity.model.Security;
 import be.github.homesecurity.model.Sensor;
+import be.github.homesecurity.model.sim.DetectionSimulator;
 import be.github.homesecurity.view.HomeView;
+import javafx.application.Platform;
 
 public class HomeController {
 
     private final Home model;
     private final HomeView view;
+
+    private DetectionSimulator detectionSimulator;
 
     public HomeController(Home model, HomeView view) {
         this.model = model;
@@ -30,6 +34,13 @@ public class HomeController {
                     () -> toggleSensor(security)
             );
         }
+
+        detectionSimulator = new DetectionSimulator(
+                model,
+                security -> Platform.runLater(() ->
+                        view.updateDetectingStatus(security)
+                )
+        );
     }
 
     private void activateSystem() {
@@ -69,6 +80,8 @@ public class HomeController {
                     security.getPlace(),
                     security.isActive()
             );
+
+            view.updateDetectingStatus(security);
         }
     }
 

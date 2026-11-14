@@ -6,19 +6,22 @@ import be.github.homesecurity.model.Security;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static be.github.homesecurity.Settings.*;
 
 public class DetectionSimulator {
     private final Random random = new Random();
-    private final AtomicBoolean isActive = new AtomicBoolean(false);
     private final Home home;
-    private final ScheduledExecutorService scheduler;
 
-    public DetectionSimulator(Home home) {
+    private final ScheduledExecutorService scheduler;
+    private final Consumer<Security> onDetectionChanged;
+    private final AtomicBoolean isActive = new AtomicBoolean(false);
+
+    public DetectionSimulator(Home home, Consumer<Security> onDetectionChanged) {
         this.home = home;
+        this.onDetectionChanged = onDetectionChanged;
 
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.execute(this::simulateStep);
@@ -36,18 +39,20 @@ public class DetectionSimulator {
         if (security.isActive()) {
             isActive.set(true);
             security.setDetecting(true);
+            onDetectionChanged.accept(security);
             printStatus(security);
 
             scheduler.schedule(() -> {
                 isActive.set(false);
                 security.setDetecting(false);
+                onDetectionChanged.accept(security);
                 printStatus(security);
 
                 isActive.set(true);
                 scheduler.schedule(() -> {
                     simulateStep();
                 }, (long) random.nextInt(0, MAX_RANDOM_DELAY)
-                        * RANDOM_DELAY_MULTIPLIER * 10, TIMEUNIT);
+                        * RANDOM_DELAY_MULTIPLIER, TIMEUNIT);
 
             }, DETECTION_DURATION, TIMEUNIT);
 

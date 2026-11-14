@@ -1,6 +1,7 @@
 
 package be.github.homesecurity.view;
 
+import be.github.homesecurity.model.Security;
 import be.github.homesecurity.view.components.SecurityIndicator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -132,6 +133,14 @@ public class HomeView {
         lblSensorStatus.setText(
                 active ? STATUS_ACTIVE : STATUS_INACTIVE
         );
+    }
+
+    public void updateDetectingStatus(Security security) {
+        SecurityIndicator indicator = securityIndicators.get(security.getPlace());
+
+        if (indicator != null) {
+            indicator.setDetectingStatusActive(security.isDetected());
+        }
     }
 
     public Button getBtnActivate() {

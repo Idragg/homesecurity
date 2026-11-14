@@ -15,6 +15,8 @@ public class Settings {
 
     public static final Color ACTIVE_COLOR = Color.RED;
     public static final Color INACTIVE_COLOR = Color.GREEN;
+    public static final Color DETECTING_COLOR = Color.YELLOW;
+    public static final Color NOT_DETECTING_COLOR = Color.TRANSPARENT;
 
 
     // =========================
@@ -75,8 +77,8 @@ public class Settings {
     public static final int DETECTION_DURATION = 5;
 
     // Maximum random delay value (exclusive)
-    public static final int MAX_RANDOM_DELAY = 10;
+    public static final int MAX_RANDOM_DELAY = 5;
 
     // Multiplier used to calculate the random delay in seconds
-    public static final int RANDOM_DELAY_MULTIPLIER = 10;
+    public static final int RANDOM_DELAY_MULTIPLIER = 1;
 }

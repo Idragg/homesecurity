@@ -2,7 +2,6 @@ package be.github.homesecurity;
 
 import be.github.homesecurity.controller.HomeController;
 import be.github.homesecurity.model.*;
-import be.github.homesecurity.model.sim.DetectionSimulator;
 import be.github.homesecurity.view.HomeView;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -35,8 +34,6 @@ public class Main extends Application {
         model.subscribeSecuritySystem(securitySystem6);
         model.subscribeSecuritySystem(securitySystem7);
         controller.load();
-
-        new DetectionSimulator(model);
 
         Scene scene = new Scene(view.getRoot(), WINDOW_WIDTH, WINDOW_HEIGHT);
 
