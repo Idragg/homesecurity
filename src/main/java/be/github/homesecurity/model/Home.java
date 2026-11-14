@@ -39,4 +39,10 @@ public class Home implements HomeNotifier {
     public List<Security> getSecuritieSystems() {
         return List.copyOf(securitieSystems);
     }
+
+    /**
+     * TODO
+     * ADDING DETECTING ACTIVITY
+     * ADDING MORE SECURITY MEASURES
+    */
 }

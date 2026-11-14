@@ -1,15 +1,15 @@
 package be.github.homesecurity;
 
 import be.github.homesecurity.controller.HomeController;
-import be.github.homesecurity.model.Home;
-import be.github.homesecurity.model.Pressureplate;
-import be.github.homesecurity.model.Security;
-import be.github.homesecurity.model.Sensor;
+import be.github.homesecurity.model.*;
+import be.github.homesecurity.model.sim.DetectionSimulator;
 import be.github.homesecurity.view.HomeView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import static be.github.homesecurity.Settings.*;
 
 public class Main extends Application {
 
@@ -25,6 +25,7 @@ public class Main extends Application {
         Security securitySystem4 = new Pressureplate("Side door");
         Security securitySystem5 = new Sensor("Bathroom");
         Security securitySystem6 = new Pressureplate("Kids room");
+        Security securitySystem7 = new InfraredSensor("Shed");
 
         model.subscribeSecuritySystem(securitySystem1);
         model.subscribeSecuritySystem(securitySystem2);
@@ -32,12 +33,15 @@ public class Main extends Application {
         model.subscribeSecuritySystem(securitySystem4);
         model.subscribeSecuritySystem(securitySystem5);
         model.subscribeSecuritySystem(securitySystem6);
+        model.subscribeSecuritySystem(securitySystem7);
         controller.load();
 
-        Scene scene = new Scene(view.getRoot(), 800, 600);
+        new DetectionSimulator(model);
 
-        primaryStage.getIcons().add(new Image("/logo.png"));
-        primaryStage.setTitle("Homesecurity");
+        Scene scene = new Scene(view.getRoot(), WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        primaryStage.getIcons().add(new Image(LOGO_URL));
+        primaryStage.setTitle(WINDOW_TITLE);
         primaryStage.setScene(scene);
         primaryStage.setMaximized(true);
         primaryStage.show();

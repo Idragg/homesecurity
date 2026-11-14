@@ -8,6 +8,7 @@ import be.github.homesecurity.model.Sensor;
 import be.github.homesecurity.view.HomeView;
 
 public class HomeController {
+
     private final Home model;
     private final HomeView view;
 
@@ -23,8 +24,8 @@ public class HomeController {
         for (Security security : model.getSecuritieSystems()) {
             view.addSecurityIndicator(
                     security.getPlace(),
+                    security.getPlace(),
                     getSecurityIcon(security),
-                    security,
                     security.isActive(),
                     () -> toggleSensor(security)
             );
@@ -38,7 +39,7 @@ public class HomeController {
         view.getBtnDeactivate().setDisable(false);
 
         view.updateSystemStatus(true);
-        view.updateAllSecurityStatuses(model.getSecuritieSystems());
+        updateAllSecurityStatuses();
     }
 
     private void deactivateSystem() {
@@ -48,14 +49,27 @@ public class HomeController {
         view.getBtnActivate().setDisable(false);
 
         view.updateSystemStatus(false);
-        view.updateAllSecurityStatuses(model.getSecuritieSystems());
+        updateAllSecurityStatuses();
     }
 
     private void toggleSensor(Security security) {
         boolean newStatus = !security.isActive();
 
         model.setSecurityStatus(security, newStatus);
-        view.updateSecurityStatus(security, newStatus);
+
+        view.updateSecurityStatus(
+                security.getPlace(),
+                newStatus
+        );
+    }
+
+    private void updateAllSecurityStatuses() {
+        for (Security security : model.getSecuritieSystems()) {
+            view.updateSecurityStatus(
+                    security.getPlace(),
+                    security.isActive()
+            );
+        }
     }
 
     private String getSecurityIcon(Security security) {
@@ -65,4 +79,9 @@ public class HomeController {
             default -> "🔒";
         };
     }
+
+    /**
+     * TODO
+     * AANMAKEN CONTROLE OM TE ZIEN OF ALLE SENSORS OPSTAAN ZO JA SYSTEEM ACTIEF ZO NEE SYSTEEM UIT
+     * */
 }

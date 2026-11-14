@@ -1,7 +1,7 @@
 
 package be.github.homesecurity.view;
 
-import be.github.homesecurity.model.Security;
+import be.github.homesecurity.view.components.SecurityIndicator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -10,12 +10,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+
+import static be.github.homesecurity.Settings.*;
 
 public class HomeView {
 
@@ -27,7 +27,7 @@ public class HomeView {
     private VBox root;
     private VBox securityList;
 
-    private final Map<Security, Circle> securityIndicators =
+    private final Map<String, SecurityIndicator> securityIndicators =
             new LinkedHashMap<>();
 
     private HBox buttonBox;
@@ -53,6 +53,10 @@ public class HomeView {
         securityList.setAlignment(Pos.CENTER_LEFT);
         securityList.setPadding(new Insets(20));
         securityList.setMaxWidth(Double.MAX_VALUE);
+
+        root = new VBox(ROOT_SPACING);
+        root.setStyle(BACKGROUND_COLOR);
+        root.setPadding(new Insets(ROOT_PADDING));
     }
 
     private void settingView() {
@@ -71,20 +75,18 @@ public class HomeView {
                 lblSensorStatus
         );
 
-        sensorIndicator.setFill(Color.GREEN);
+        sensorIndicator.setFill(INACTIVE_COLOR);
 
         // Logo
         logoImage = new Image(
-                getClass().getResourceAsStream("/logo.png")
+                getClass().getResourceAsStream(LOGO_URL)
         );
 
         ImageView logo = new ImageView(logoImage);
-        logo.setFitWidth(300);
+        logo.setFitWidth(LOGO_WIDTH);
         logo.setPreserveRatio(true);
 
         // Main layout
-        root = new VBox(20);
-        root.setPadding(new Insets(20));
         root.setAlignment(Pos.TOP_CENTER);
 
         root.getChildren().addAll(
@@ -96,90 +98,41 @@ public class HomeView {
     }
 
     // Add a security system dynamically
-    public void addSecurityIndicator(Security security, Runnable onClick) {
+    public void addSecurityIndicator(
+            String id,
+            String name,
+            String icon,
+            boolean active,
+            Runnable onClick) {
 
-        Label label = new Label(security.getPlace());
-
-        Circle circle = new Circle(12);
-        circle.setFill(
-                security.isActive() ? Color.RED : Color.GREEN
+        SecurityIndicator indicator = new SecurityIndicator(
+                name,
+                icon,
+                active,
+                onClick
         );
 
-        circle.setOnMouseClicked(event -> onClick.run());
-
-        HBox row = new HBox(15, label, circle);
-        row.setAlignment(Pos.CENTER_LEFT);
-
-        securityList.getChildren().add(row);
-
-        securityIndicators.put(security, circle);
+        securityList.getChildren().add(indicator.getRoot());
+        securityIndicators.put(id, indicator);
     }
 
     // Update one security system
-    public void updateSecurityStatus(Security security, boolean active) {
+    public void updateSecurityStatus(String id, boolean active) {
+        SecurityIndicator indicator = securityIndicators.get(id);
 
-        Circle circle = securityIndicators.get(security);
-
-        if (circle != null) {
-            circle.setFill(active ? Color.RED : Color.GREEN);
-        }
-    }
-
-    // Update all security systems
-    public void updateAllSecurityStatuses(List<Security> securities) {
-
-        for (Security security : securities) {
-            updateSecurityStatus(security, security.isActive());
+        if (indicator != null) {
+            indicator.setActive(active);
         }
     }
 
     // Update main system status
     public void updateSystemStatus(boolean active) {
-
-        sensorIndicator.setFill(active ? Color.RED : Color.GREEN);
+        sensorIndicator.setFill(active ? ACTIVE_COLOR : INACTIVE_COLOR);
 
         lblSensorStatus.setText(
-                active
-                        ? "Security system active"
-                        : "Security system disabled"
+                active ? STATUS_ACTIVE : STATUS_INACTIVE
         );
     }
-
-    public void addSecurityIndicator(
-            String name,
-            String icon,
-            Security security,
-            boolean active,
-            Runnable onClick) {
-
-        Label iconLabel = new Label(icon);
-        iconLabel.setStyle("-fx-font-size: 20px;");
-
-        // Vaste breedte voor alle iconen
-        iconLabel.setMinWidth(40);
-        iconLabel.setPrefWidth(40);
-        iconLabel.setMaxWidth(40);
-        iconLabel.setAlignment(Pos.CENTER);
-
-        Label label = new Label(name);
-
-        // Vaste breedte voor alle namen
-        label.setMinWidth(120);
-        label.setPrefWidth(120);
-        label.setMaxWidth(120);
-
-        Circle circle = new Circle(12);
-        circle.setFill(active ? Color.RED : Color.GREEN);
-        circle.setOnMouseClicked(event -> onClick.run());
-
-        HBox row = new HBox(15, iconLabel, label, circle);
-        row.setAlignment(Pos.CENTER_LEFT);
-
-        securityList.getChildren().add(row);
-
-        securityIndicators.put(security, circle);
-    }
-
 
     public Button getBtnActivate() {
         return btnActivate;
