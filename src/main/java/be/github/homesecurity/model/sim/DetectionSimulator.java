@@ -6,6 +6,8 @@ import be.github.homesecurity.model.Security;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -16,6 +18,8 @@ public class DetectionSimulator {
     private final Home home;
 
     private final ScheduledExecutorService scheduler;
+    private ScheduledFuture<?> detectionTask;
+    private Security currentlyDetecting;
     private final Consumer<Security> onDetectionChanged;
     private final AtomicBoolean isActive = new AtomicBoolean(false);
 
@@ -37,23 +41,19 @@ public class DetectionSimulator {
         Security security = home.getSecuritieSystems().get(randomIndex);
 
         if (security.isActive()) {
-            isActive.set(true);
-            security.setDetecting(true);
-            onDetectionChanged.accept(security);
-            printStatus(security);
+            changeSecurityStatus(security, true);
 
-            scheduler.schedule(() -> {
-                isActive.set(false);
-                security.setDetecting(false);
-                onDetectionChanged.accept(security);
-                printStatus(security);
+            currentlyDetecting = security;
 
-                isActive.set(true);
-                scheduler.schedule(() -> {
-                    simulateStep();
-                }, (long) random.nextInt(0, MAX_RANDOM_DELAY)
-                        * RANDOM_DELAY_MULTIPLIER, TIMEUNIT);
+            detectionTask = scheduler.schedule(() -> {
+                changeSecurityStatus(security, false);
+                currentlyDetecting = null;
 
+                scheduler.schedule(
+                        this::simulateStep,
+                        (long) random.nextInt(0, MAX_RANDOM_DELAY) * RANDOM_DELAY_MULTIPLIER,
+                        TIMEUNIT
+                );
             }, DETECTION_DURATION, TIMEUNIT);
 
         } else {
@@ -65,6 +65,32 @@ public class DetectionSimulator {
     public void stop() {
         isActive.set(false);
         scheduler.shutdownNow();
+    }
+
+    public void stopDetection(Security security) {
+        if (currentlyDetecting != security) {
+            return;
+        }
+
+        if (detectionTask != null) {
+            detectionTask.cancel(false);
+        }
+
+        changeSecurityStatus(security, false);
+        currentlyDetecting = null;
+
+        scheduler.schedule(
+                this::simulateStep,
+                1,
+                TIMEUNIT
+        );
+    }
+
+    private void changeSecurityStatus(Security security, boolean active) {
+        isActive.set(active);
+        security.setDetecting(active);
+        onDetectionChanged.accept(security);
+        printStatus(security);
     }
 
     private void printStatus(Security security) {

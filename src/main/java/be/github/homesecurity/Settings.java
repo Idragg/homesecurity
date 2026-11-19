@@ -15,7 +15,8 @@ public class Settings {
 
     public static final Color ACTIVE_COLOR = Color.RED;
     public static final Color INACTIVE_COLOR = Color.GREEN;
-    public static final Color DETECTING_COLOR = Color.YELLOW;
+    public static final Color IND_DETECTING_COLOR = Color.YELLOW;
+    public static final Color LBL_DETECTING_COLOR = Color.BLACK;
     public static final Color NOT_DETECTING_COLOR = Color.TRANSPARENT;
 
 
@@ -55,6 +56,10 @@ public class Settings {
     public static final String STATUS_INACTIVE =
             "Security system disabled";
 
+    public static final String LBL_TEXT_DETECTING =
+            "Security detecting something";
+
+
     // =========================
     // SECURITY INDICATOR
     // =========================
@@ -66,6 +71,8 @@ public class Settings {
     public static final int ICON_WIDTH = 40;
     public static final int NAME_WIDTH = 120;
 
+    public static final int LBL_DETECTING_WIDTH = 160;
+    public static final int LBL_DETECTING_HEIGHT = 40;
     // =========================
     // DETECTION SIMULATOR
     // =========================

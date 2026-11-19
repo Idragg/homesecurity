@@ -11,7 +11,8 @@ public class SecurityIndicator {
 
     private final HBox root;
     private final Circle indicator;
-    private Circle indicatorDetecting;
+    private final Circle indicatorDetecting;
+    private final Label lblIndicatorDetecting;
 
     public SecurityIndicator(
             String name,
@@ -29,6 +30,10 @@ public class SecurityIndicator {
         nameLabel.setMinWidth(NAME_WIDTH);
         nameLabel.setPrefWidth(NAME_WIDTH);
 
+        lblIndicatorDetecting = new Label();
+        lblIndicatorDetecting.setMinWidth(LBL_DETECTING_WIDTH);
+        lblIndicatorDetecting.setPrefWidth(LBL_DETECTING_WIDTH);
+
         indicator = new Circle(INDICATOR_RADIUS);
         indicatorDetecting = new Circle(INDICATOR_RADIUS);
         setActive(active);
@@ -41,7 +46,8 @@ public class SecurityIndicator {
                 iconLabel,
                 nameLabel,
                 indicator,
-                indicatorDetecting
+                indicatorDetecting,
+                lblIndicatorDetecting
         );
 
         root.setAlignment(Pos.CENTER_LEFT);
@@ -56,6 +62,13 @@ public class SecurityIndicator {
     }
 
     public void setDetectingStatusActive(boolean detecting) {
-        indicatorDetecting.setFill(detecting ? DETECTING_COLOR : NOT_DETECTING_COLOR);
+        indicatorDetecting.setFill(detecting ? IND_DETECTING_COLOR : NOT_DETECTING_COLOR);
+        lblIndicatorDetecting.setTextFill(detecting ? LBL_DETECTING_COLOR : NOT_DETECTING_COLOR);
+
+        if (detecting) {
+            lblIndicatorDetecting.setText(LBL_TEXT_DETECTING);
+        } else {
+            lblIndicatorDetecting.setText("");
+        }
     }
 }

@@ -56,6 +56,10 @@ public class HomeController {
     private void deactivateSystem() {
         model.deactivateSecuritySystem();
 
+        for (Security security : model.getSecuritieSystems()) {
+            detectionSimulator.stopDetection(security);
+        }
+
         view.getBtnDeactivate().setDisable(true);
         view.getBtnActivate().setDisable(false);
 
@@ -68,10 +72,16 @@ public class HomeController {
 
         model.setSecurityStatus(security, newStatus);
 
+        if (!newStatus) {
+            detectionSimulator.stopDetection(security);
+        }
+
         view.updateSecurityStatus(
                 security.getPlace(),
                 newStatus
         );
+
+        view.updateDetectingStatus(security);
     }
 
     private void updateAllSecurityStatuses() {

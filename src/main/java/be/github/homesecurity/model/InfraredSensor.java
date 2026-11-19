@@ -23,11 +23,11 @@ public class InfraredSensor implements Security {
             System.out.printf("This %s by \"%s\" is already active\n", this.getClass().getSimpleName(), place);
         } else if (!this.active && active) {
             System.out.printf("This %s \"%s\" is now active\n", this.getClass().getSimpleName(), place);
-            this.active = active;
         } else {
             System.out.printf("This %s \"%s\" is deactivated\n", this.getClass().getSimpleName(), place);
-            this.active = active;
+            setDetecting(false);
         }
+        this.active = active;
     }
 
     @Override
