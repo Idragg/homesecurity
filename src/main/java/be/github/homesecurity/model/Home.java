@@ -40,9 +40,14 @@ public class Home implements HomeNotifier {
         return List.copyOf(securitieSystems);
     }
 
+    public boolean getSecuritySystemsStatus() {
+        return securitieSystems.stream()
+                .allMatch(Security::isActive);
+    }
+
     /**
      * TODO
      * ADDING DETECTING ACTIVITY
      * ADDING MORE SECURITY MEASURES
-    */
+     */
 }

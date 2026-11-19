@@ -9,6 +9,8 @@ import be.github.homesecurity.model.sim.DetectionSimulator;
 import be.github.homesecurity.view.HomeView;
 import javafx.application.Platform;
 
+import java.util.List;
+
 public class HomeController {
 
     private final Home model;
@@ -45,12 +47,8 @@ public class HomeController {
 
     private void activateSystem() {
         model.activateSecuritySystem();
-
-        view.getBtnActivate().setDisable(true);
-        view.getBtnDeactivate().setDisable(false);
-
-        view.updateSystemStatus(true);
         updateAllSecurityStatuses();
+        checkAllSecurityStatuses();
     }
 
     private void deactivateSystem() {
@@ -60,11 +58,8 @@ public class HomeController {
             detectionSimulator.stopDetection(security);
         }
 
-        view.getBtnDeactivate().setDisable(true);
-        view.getBtnActivate().setDisable(false);
-
-        view.updateSystemStatus(false);
         updateAllSecurityStatuses();
+        checkAllSecurityStatuses();
     }
 
     private void toggleSensor(Security security) {
@@ -82,6 +77,8 @@ public class HomeController {
         );
 
         view.updateDetectingStatus(security);
+
+        checkAllSecurityStatuses();
     }
 
     private void updateAllSecurityStatuses() {
@@ -103,8 +100,12 @@ public class HomeController {
         };
     }
 
-    /**
-     * TODO
-     * AANMAKEN CONTROLE OM TE ZIEN OF ALLE SENSORS OPSTAAN ZO JA SYSTEEM ACTIEF ZO NEE SYSTEEM UIT
-     * */
+    private void checkAllSecurityStatuses() {
+        boolean allActive = model.getSecuritySystemsStatus();
+
+        view.getBtnDeactivate().setDisable(!allActive);
+        view.getBtnActivate().setDisable(allActive);
+
+        view.updateSystemStatus(allActive);
+    }
 }
